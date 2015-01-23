@@ -5,9 +5,9 @@ set -o pipefail
 MASON_ROOT=${MASON_ROOT:-`pwd`/mason_packages}
 MASON_BUCKET=${MASON_BUCKET:-mason-binaries}
 
-MASON_UNAME=`uname -s`
+MASON_UNAME=$(uname -s)
 if [ ${MASON_UNAME} = 'Darwin' ]; then
-    MASON_PLATFORM=${MASON_PLATFORM:-osx}
+    MASON_PLATFORM=${MASON_PLATFORM:-macosx}
     MASON_XCODE_ROOT=`"xcode-select" -p`
 elif [ ${MASON_UNAME} = 'Linux' ]; then
     MASON_PLATFORM=${MASON_PLATFORM:-linux}
@@ -31,14 +31,17 @@ case ${MASON_ROOT} in
     *\ * ) mason_error "Directory '${MASON_ROOT} contains spaces."; exit ;;
 esac
 
-if [ ${MASON_PLATFORM} = 'osx' ]; then
+if [ ${MASON_PLATFORM} = 'macosx' ]; then
     export MASON_HOST_ARG="--host=x86_64-apple-darwin"
-    export MASON_PLATFORM_VERSION=`xcrun --sdk macosx --show-sdk-version`
+    OSX_SDK_VERSION=`xcrun --sdk macosx --show-sdk-version`
+    export MASON_PLATFORM_VERSION=$(uname -m)
 
     MASON_SDK_ROOT=${MASON_XCODE_ROOT}/Platforms/MacOSX.platform/Developer
-    MASON_SDK_PATH="${MASON_SDK_ROOT}/SDKs/MacOSX${MASON_PLATFORM_VERSION}.sdk"
-    export MASON_CFLAGS="-mmacosx-version-min=${MASON_PLATFORM_VERSION} -isysroot ${MASON_SDK_PATH} -arch i386 -arch x86_64"
-
+    MASON_SDK_PATH="${MASON_SDK_ROOT}/SDKs/MacOSX${OSX_SDK_VERSION}.sdk"
+    MIN_SDK_VERSION_FLAG="-mmacosx-version-min=10.8"
+    export CFLAGS="-isysroot ${MASON_SDK_PATH} -arch x86_64 -flto ${MIN_SDK_VERSION_FLAG}"
+    export CXXFLAGS="${CFLAGS} -fvisibility-inlines-hidden -fvisibility=hidden -fno-common"
+    export LDFLAGS="-Wl,-search_paths_first -Wl,-bind_at_load -arch x86_64 -flto ${MIN_SDK_VERSION_FLAG}"
 
 elif [ ${MASON_PLATFORM} = 'ios' ]; then
     export MASON_HOST_ARG="--host=arm-apple-darwin"
@@ -133,6 +136,9 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
           --arch="${MASON_ANDROID_ARCH}" \
           --platform="${MASON_API_LEVEL}"
     fi
+else
+    mason_error "Unknown MASON_PLATFORM (${MASON_PLATFORM})"
+    exit 1
 fi
 
 
