@@ -4,6 +4,7 @@ set -o pipefail
 
 MASON_ROOT=${MASON_ROOT:-`pwd`/mason_packages}
 MASON_BUCKET=${MASON_BUCKET:-mason-binaries}
+MASON_DEBUG=${MASON_DEBUG:-false}
 
 MASON_UNAME=`uname -s`
 if [ ${MASON_UNAME} = 'Darwin' ]; then
@@ -241,7 +242,7 @@ function mason_check_existing {
 
 
 function mason_clear_existing {
-    if [ -d "${MASON_PREFIX}" ]; then
+    if [ -d "${MASON_PREFIX}" ] && [[ ${MASON_DEBUG} == false ]]; then
         mason_step "Removing existing package... ${MASON_PREFIX}"
         rm -rf "${MASON_PREFIX}"
     fi
@@ -264,24 +265,36 @@ function mason_download {
 }
 
 function mason_setup_build_dir {
-    rm -rf "${MASON_ROOT}/.build"
+    if [[ ${MASON_DEBUG} == false ]]; then
+        mason_step "Clearing out '${MASON_ROOT}/.build'"
+        rm -rf "${MASON_ROOT}/.build"
+    fi
     mkdir -p "${MASON_ROOT}/.build"
     cd "${MASON_ROOT}/.build"
 }
 
 function mason_extract_tar_gz {
     mason_setup_build_dir
-    tar xzf ../.cache/${MASON_SLUG} $@
+    if [[ ${MASON_DEBUG} == false ]]; then
+        mason_step "Unpacking ../.cache/${MASON_SLUG}"
+        tar xzf ../.cache/${MASON_SLUG} $@
+    fi
 }
 
 function mason_extract_tar_bz2 {
     mason_setup_build_dir
-    tar xjf ../.cache/${MASON_SLUG} $@
+    if [[ ${MASON_DEBUG} == false ]]; then
+        mason_step "Unpacking ../.cache/${MASON_SLUG}"
+        tar xjf ../.cache/${MASON_SLUG} $@
+    fi
 }
 
 function mason_extract_tar_xz {
     mason_setup_build_dir
-    tar xJf ../.cache/${MASON_SLUG} $@
+    if [[ ${MASON_DEBUG} == false ]]; then
+        mason_step "Unpacking ../.cache/${MASON_SLUG}"
+        tar xJf ../.cache/${MASON_SLUG} $@
+    fi
 }
 
 function mason_prepare_compile {
@@ -402,7 +415,9 @@ function mason_build {
             lipo -info ../lib/$i
         done
         cd "${MASON_PREFIX}"
-        rm -rf lib-isim lib-ios
+        if [[ ${MASON_DEBUG} == false ]]; then
+            rm -rf lib-isim lib-ios
+        fi
     elif [ ${MASON_PLATFORM} = 'android' ]; then
         cd "${MASON_BUILD_PATH}"
         mason_compile
@@ -413,7 +428,9 @@ function mason_build {
 
     mason_success "Installed at ${MASON_PREFIX}"
 
-    rm -rf ${MASON_ROOT}/.build
+    if [[ ${MASON_DEBUG} == false ]]; then
+        rm -rf ${MASON_ROOT}/.build
+    fi
 }
 
 
