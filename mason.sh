@@ -41,8 +41,13 @@ if [ ${MASON_PLATFORM} = 'osx' ]; then
     MIN_SDK_VERSION_FLAG="-mmacosx-version-min=10.8"
     SYSROOT_FLAGS="-isysroot ${MASON_SDK_PATH} -arch x86_64 ${MIN_SDK_VERSION_FLAG}"
     export CFLAGS="${SYSROOT_FLAGS}"
-    export CXXFLAGS="${CFLAGS} -fvisibility-inlines-hidden"
-    export LDFLAGS="-Wl,-search_paths_first -Wl,-bind_at_load ${SYSROOT_FLAGS}"
+    export CXXFLAGS="${CFLAGS} -fvisibility-inlines-hidden -stdlib=libc++ -std=c++11"
+    # NOTE: OSX needs '-stdlib=libc++ -std=c++11' in both CXXFLAGS and LDFLAGS
+    # to correctly target c++11 for build systems that don't know about it yet (like libgeos 3.4.2)
+    # But because LDFLAGS is also for C libs we can only put these flags into LDFLAGS per package
+    export LDFLAGS="-Wl,-search_paths_first ${SYSROOT_FLAGS}"
+    export CXX="${MASON_XCODE_ROOT}/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++"
+    export CC="${MASON_XCODE_ROOT}/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
 
 elif [ ${MASON_PLATFORM} = 'ios' ]; then
     export MASON_HOST_ARG="--host=arm-apple-darwin"
@@ -96,8 +101,8 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         MASON_ANDROID_CROSS_COMPILER="aarch64-linux-android-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
 
-        export CFLAGS="-target aarch64-none-linux-android -D_LITTLE_ENDIAN ${CFLAGS}"
-        export LDFLAGS="-target aarch64-none-linux-android ${LDFLAGS}"
+        export CFLAGS="-target aarch64-none-linux-android -mfix-cortex-a53-835769 -D_LITTLE_ENDIAN ${CFLAGS}"
+        export LDFLAGS="-target aarch64-none-linux-android -Wl,--fix-cortex-a53-835769 ${LDFLAGS}"
         
         export JNIDIR="arm64-v8a"
         MASON_ANDROID_ARCH="arm64"
@@ -132,7 +137,7 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         MASON_ANDROID_CROSS_COMPILER="x86-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
 
-        export CFLAGS="-target i686-none-linux-android -march=i686 -msse3 -mstackrealign -mfpmath=sse ${CFLAGS}"
+        export CFLAGS="-target i686-none-linux-android -march=i686 -msse3 -mfpmath=sse ${CFLAGS}"
         export LDFLAGS="-target i686-none-linux-android -march=i686 ${LDFLAGS}"
         
         export JNIDIR="x86"
