@@ -426,8 +426,6 @@ function mason_build {
     fi
 
     mason_success "Installed at ${MASON_PREFIX}"
-
-    rm -rf ${MASON_ROOT}/.build
 }
 
 
