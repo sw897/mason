@@ -579,6 +579,9 @@ function mason_run {
         mason_version
     elif [ "$1" == "prefix" ]; then
         mason_prefix
+    elif [ "$1" == "env" ]; then
+        eval echo \$${2}
+        exit
     elif [ $1 ]; then
         mason_error "Unknown command '$1'"
         exit 1
