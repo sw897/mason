@@ -122,6 +122,7 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
     CFLAGS="-fpic -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-integrated-as -fomit-frame-pointer -fstrict-aliasing -Wno-invalid-command-line-argument -Wno-unused-command-line-argument"
     LDFLAGS="-no-canonical-prefixes -Wl,--warn-shared-textrel -Wl,--fatal-warnings"
     export CPPFLAGS="-D__ANDROID__"
+    export JNIDIR=${MASON_ANDROID_ABI}
 
     if [ ${MASON_ANDROID_ABI} = 'arm64-v8a' ]; then
         MASON_ANDROID_TOOLCHAIN="aarch64-linux-android"
@@ -133,7 +134,6 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         # Using bfd for aarch64: https://code.google.com/p/android/issues/detail?id=204151
         export LDFLAGS="-target aarch64-none-linux-android -fuse-ld=bfd ${LDFLAGS}"
 
-        export JNIDIR="arm64-v8a"
         MASON_ANDROID_ARCH="arm64"
         MASON_ANDROID_PLATFORM="21"
 
@@ -145,7 +145,6 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         export CFLAGS="-target armv7-none-linux-androideabi -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp -D_LITTLE_ENDIAN ${CFLAGS}"
         export LDFLAGS="-target armv7-none-linux-androideabi -march=armv7-a -Wl,--fix-cortex-a8 -fuse-ld=gold ${LDFLAGS}"
 
-        export JNIDIR="armeabi-v7a"
         MASON_ANDROID_ARCH="arm"
         MASON_ANDROID_PLATFORM="9"
 
@@ -157,7 +156,6 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         export CFLAGS="-target armv5te-none-linux-androideabi -march=armv5te -mtune=xscale -msoft-float -D_LITTLE_ENDIAN ${CFLAGS}"
         export LDFLAGS="-target armv5te-none-linux-androideabi -march=armv5te -fuse-ld=gold ${LDFLAGS}"
 
-        export JNIDIR="armeabi"
         MASON_ANDROID_ARCH="arm"
         MASON_ANDROID_PLATFORM="9"
 
@@ -169,7 +167,6 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         export CFLAGS="-target i686-none-linux-android -march=i686 -msse3 -mfpmath=sse ${CFLAGS}"
         export LDFLAGS="-target i686-none-linux-android -march=i686 -fuse-ld=gold ${LDFLAGS}"
 
-        export JNIDIR="x86"
         MASON_ANDROID_ARCH="x86"
         MASON_ANDROID_PLATFORM="9"
 
@@ -178,7 +175,6 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         MASON_ANDROID_CROSS_COMPILER="x86_64-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
 
-        export JNIDIR="x86_64"
         export CFLAGS="-target x86_64-none-linux-android -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel ${CFLAGS}"
         export LDFLAGS="-target x86_64-none-linux-android -march=x86-64 -fuse-ld=gold ${LDFLAGS}"
 
@@ -193,7 +189,6 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         export CFLAGS="-target mipsel-none-linux-android ${CFLAGS}"
         export LDFLAGS="-target mipsel-none-linux-android ${LDFLAGS}"
 
-        export JNIDIR="mips"
         MASON_ANDROID_ARCH="mips"
         MASON_ANDROID_PLATFORM="9"
 
@@ -205,7 +200,6 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         export CFLAGS="-target mips64el-none-linux-android ${CFLAGS}"
         export LDFLAGS="-target mips64el-none-linux-android ${LDFLAGS}"
 
-        export JNIDIR="mips64"
         MASON_ANDROID_ARCH="mips64"
         MASON_ANDROID_PLATFORM="21"
     fi
