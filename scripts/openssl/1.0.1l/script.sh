@@ -27,19 +27,19 @@ function mason_prepare_compile {
         MASON_OS_COMPILER="linux-x86_64 enable-ec_nistp_64_gcc_128"
     elif [[ ${MASON_PLATFORM} == 'android' ]]; then
         COMMON="-fpic -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-integrated-as -O2 -g -DNDEBUG -fomit-frame-pointer -fstrict-aliasing -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -no-canonical-prefixes"
-        if [ ${MASON_ANDROID_ABI} = 'arm-v5' ]; then
+        if [ ${MASON_ANDROID_ABI} = 'armeabi' ]; then
             MASON_OS_COMPILER="linux-armv4 -march=armv5te -mtune=xscale -msoft-float -fuse-ld=gold $COMMON"
-        elif [ ${MASON_ANDROID_ABI} = 'arm-v7' ]; then
+        elif [ ${MASON_ANDROID_ABI} = 'armeabi-v7a' ]; then
             MASON_OS_COMPILER="linux-armv4 -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp -Wl,--fix-cortex-a8 -fuse-ld=gold $COMMON"
         elif [ ${MASON_ANDROID_ABI} = 'x86' ]; then
             MASON_OS_COMPILER="linux-elf -march=i686 -msse3 -mfpmath=sse -fuse-ld=gold $COMMON"
         elif [ ${MASON_ANDROID_ABI} = 'mips' ]; then
             MASON_OS_COMPILER="linux-generic32 $COMMON"
-        elif [ ${MASON_ANDROID_ABI} = 'arm-v8' ]; then
+        elif [ ${MASON_ANDROID_ABI} = 'arm64-v8a' ]; then
             MASON_OS_COMPILER="linux-generic64 enable-ec_nistp_64_gcc_128 -fuse-ld=gold $COMMON"
-        elif [ ${MASON_ANDROID_ABI} = 'x86-64' ]; then
+        elif [ ${MASON_ANDROID_ABI} = 'x86_64' ]; then
             MASON_OS_COMPILER="linux-x86_64 enable-ec_nistp_64_gcc_128 -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel -fuse-ld=gold $COMMON"
-        elif [ ${MASON_ANDROID_ABI} = 'mips-64' ]; then
+        elif [ ${MASON_ANDROID_ABI} = 'mips64' ]; then
             MASON_OS_COMPILER="linux-generic32 $COMMON"
         fi
     fi

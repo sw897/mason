@@ -117,13 +117,13 @@ elif [ ${MASON_PLATFORM} = 'linux' ]; then
     fi
 
 elif [ ${MASON_PLATFORM} = 'android' ]; then
-    export MASON_ANDROID_ABI=${MASON_ANDROID_ABI:-arm-v7}
+    export MASON_ANDROID_ABI=${MASON_ANDROID_ABI:-armeabi-v7a}
 
     CFLAGS="-fpic -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-integrated-as -fomit-frame-pointer -fstrict-aliasing -Wno-invalid-command-line-argument -Wno-unused-command-line-argument"
     LDFLAGS="-no-canonical-prefixes -Wl,--warn-shared-textrel -Wl,--fatal-warnings"
     export CPPFLAGS="-D__ANDROID__"
 
-    if [ ${MASON_ANDROID_ABI} = 'arm-v8' ]; then
+    if [ ${MASON_ANDROID_ABI} = 'arm64-v8a' ]; then
         MASON_ANDROID_TOOLCHAIN="aarch64-linux-android"
         MASON_ANDROID_CROSS_COMPILER="aarch64-linux-android-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
@@ -137,7 +137,7 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         MASON_ANDROID_ARCH="arm64"
         MASON_ANDROID_PLATFORM="21"
 
-    elif [ ${MASON_ANDROID_ABI} = 'arm-v7' ]; then
+    elif [ ${MASON_ANDROID_ABI} = 'armeabi-v7a' ]; then
         MASON_ANDROID_TOOLCHAIN="arm-linux-androideabi"
         MASON_ANDROID_CROSS_COMPILER="arm-linux-androideabi-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
@@ -149,7 +149,7 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         MASON_ANDROID_ARCH="arm"
         MASON_ANDROID_PLATFORM="9"
 
-    elif [ ${MASON_ANDROID_ABI} = 'arm-v5' ]; then
+    elif [ ${MASON_ANDROID_ABI} = 'armeabi' ]; then
         MASON_ANDROID_TOOLCHAIN="arm-linux-androideabi"
         MASON_ANDROID_CROSS_COMPILER="arm-linux-androideabi-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
@@ -173,7 +173,7 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         MASON_ANDROID_ARCH="x86"
         MASON_ANDROID_PLATFORM="9"
 
-    elif [ ${MASON_ANDROID_ABI} = 'x86-64' ]; then
+    elif [ ${MASON_ANDROID_ABI} = 'x86_64' ]; then
         MASON_ANDROID_TOOLCHAIN="x86_64-linux-android"
         MASON_ANDROID_CROSS_COMPILER="x86_64-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
@@ -197,7 +197,7 @@ elif [ ${MASON_PLATFORM} = 'android' ]; then
         MASON_ANDROID_ARCH="mips"
         MASON_ANDROID_PLATFORM="9"
 
-    elif [ ${MASON_ANDROID_ABI} = 'mips-64' ]; then
+    elif [ ${MASON_ANDROID_ABI} = 'mips64' ]; then
         MASON_ANDROID_TOOLCHAIN="mips64el-linux-android"
         MASON_ANDROID_CROSS_COMPILER="mips64el-linux-android-4.9"
         export MASON_HOST_ARG="--host=${MASON_ANDROID_TOOLCHAIN}"
