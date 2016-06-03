@@ -1,23 +1,31 @@
-language: cpp
+language: generic
+
+os: linux
 
 sudo: false
 
-env:
-  matrix:
-    - MASON_TEST="unit"
-    - MASON_TEST="c_install"
-    - MASON_TEST="c_build"
-    - MASON_TEST="c_install_symlink_includes"
-    - MASON_TEST="cpp11_header_install"
-    - MASON_TEST="cpp11_install"
-    - MASON_TEST="cpp11_build"
-    - MASON_TEST="c_build_android"
+addons:
+  apt:
+    sources: [ 'ubuntu-toolchain-r-test' ]
+    packages: [ 'libstdc++-5-dev' ]
 
 install:
-# put mason at symlink to simulate historically recommended install method
-- mkdir -p custom/path
-- ln -s $(pwd)/mason $(pwd)/custom/path/mason
-- export PATH=$(pwd)/custom/path:${PATH}
+ # put mason at symlink to simulate historically recommended install method
+ - mkdir -p custom/path
+ - ln -s $(pwd)/mason $(pwd)/custom/path/mason
+ - export PATH=$(pwd)/custom/path:${PATH}
 
 script:
-- ./test/${MASON_TEST}.sh
+ - ./test/unit.sh
+ - ./test/c_install.sh
+ - ./test/c_install_symlink_includes.sh
+ - ./test/cpp11_header_install.sh
+ - ./test/cpp11_install.sh
+ - export CLANG_VERSION='3.8.0'
+ - export CXX=clang++
+ - export CC=clang
+ - mason install clang ${CLANG_VERSION}
+ - export PATH=$(mason prefix clang ${CLANG_VERSION})/bin:${PATH}
+ - ./test/c_build.sh
+ - ./test/cpp11_build.sh
+ - ./test/c_build_android.sh
