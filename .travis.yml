@@ -16,7 +16,7 @@ env:
 install:
 # put mason at symlink to simulate historically recommended install method
 - mkdir -p custom/path
-- sudo ln -s $(pwd)/mason $(pwd)/custom/path/mason
+- ln -s $(pwd)/mason $(pwd)/custom/path/mason
 - export PATH=$(pwd)/custom/path:${PATH}
 
 script:
