@@ -14,9 +14,10 @@ env:
     - MASON_TEST="c_build_android"
 
 install:
-# NOTE: must be absolute path for predictable behavior
-# when packages call out to mason themselves in order to install deps
-- export MASON_DIR=$(pwd)
+# put mason at symlink to simulate historically recommended install method
+- mkdir -p custom/path
+- sudo ln -s $(pwd)/mason $(pwd)/custom/path/mason
+- export PATH=$(pwd)/custom/path:${PATH}
 
 script:
 - ./test/${MASON_TEST}.sh
