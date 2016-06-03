@@ -4,6 +4,18 @@ os: linux
 
 sudo: false
 
+git:
+  depth: 10
+
+env:
+  global:
+   - CCACHE_TEMPDIR=/tmp/.ccache-temp
+   - CCACHE_COMPRESS=1
+
+cache:
+  directories:
+  - $HOME/.ccache
+
 addons:
   apt:
     sources: [ 'ubuntu-toolchain-r-test' ]
@@ -22,8 +34,8 @@ script:
  - ./test/cpp11_header_install.sh
  - ./test/cpp11_install.sh
  - export CLANG_VERSION='3.8.0'
- - export CXX=clang++
- - export CC=clang
+ - export CXX="ccache clang++ -Qunused-arguments"
+ - export CC="ccache clang -Qunused-arguments"
  - mason install clang ${CLANG_VERSION}
  - export PATH=$(mason prefix clang ${CLANG_VERSION})/bin:${PATH}
  - ./test/c_build.sh
