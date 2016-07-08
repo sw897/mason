@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MASON_NAME=mapnik
-MASON_VERSION=latest
+MASON_VERSION=geometry-refactor
 MASON_LIB_FILE=lib/libmapnik-wkt.a
 
 . ${MASON_DIR:-~/.mason}/mason.sh
@@ -9,9 +9,9 @@ MASON_LIB_FILE=lib/libmapnik-wkt.a
 function mason_load_source {
     export MASON_BUILD_PATH=${MASON_ROOT}/.build/mapnik-3.x
     if [[ ! -d ${MASON_BUILD_PATH} ]]; then
-        git clone --depth 1 https://github.com/mapnik/mapnik.git ${MASON_BUILD_PATH}
+        git clone --depth 1 https://github.com/mapnik/mapnik.git ${MASON_BUILD_PATH} -b geometry-refactor
     else
-        (cd ${MASON_BUILD_PATH} && git pull)
+        (cd ${MASON_BUILD_PATH} && git pull && git checkout geometry-refactor)
     fi
 }
 
